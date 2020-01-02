@@ -1,0 +1,16 @@
+{
+    "id": "{7681F2B3-FA3A-D6A1-F890-DAE6E3E9AFB3}",
+    "name": "ServerWMC IO",
+    "type": 1,
+    "vendor": "krustyreturns",
+    "aliases": [],
+    "parentRequirements": [],
+    "childRequirements": [
+        "{F4534A2A-49F8-62CA-48C0-27AAB61B415C}"
+    ],
+    "implemented": [
+        "{59C978F7-9E10-2E66-2F66-CE762F9EEC97}"
+    ],
+    "prefix": "WMC",
+    "url": "https://github.com/Nall-chan/ServerWMC"
+}

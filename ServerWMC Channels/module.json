@@ -1,0 +1,16 @@
+{
+    "id": "{F446B45E-9640-6434-5316-0F2524700F75}",
+    "name": "ServerWMC Channels",
+    "type": 3,
+    "vendor": "krustyreturns",
+    "aliases": [],
+    "parentRequirements": [
+        "{59C978F7-9E10-2E66-2F66-CE762F9EEC97}"
+    ],
+    "childRequirements": [],
+    "implemented": [
+        "{F4534A2A-49F8-62CA-48C0-27AAB61B415C}"
+    ],
+    "prefix": "WMC",
+    "url": "https://github.com/Nall-chan/ServerWMC"
+}
