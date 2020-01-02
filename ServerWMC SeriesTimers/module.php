@@ -10,8 +10,8 @@ require_once __DIR__ . '/../libs/ServerWMVModuleBase.php';
  */
 class ServerWMCSeriesTimers extends ServerWMVModuleBase
 {
-    static $FunctionFilter = 'GetSeriesTimers';
-    static $SeriesTimerKeys = [
+    public static $FunctionFilter = 'GetSeriesTimers';
+    public static $SeriesTimerKeys = [
         'TimerIDLong',
         'Title',
         'ChannelID',
@@ -63,6 +63,11 @@ class ServerWMCSeriesTimers extends ServerWMVModuleBase
         }
         $this->RegisterHook('/hook/ServerWMCSeriesTimer/' . $this->InstanceID);
         $this->RefreshHTMLData($this->SeriesTimers);
+    }
+
+    public function GetSeriesTimersData()
+    {
+        return $this->SeriesTimers;
     }
 
     protected function GetSeriesTimers(array $SeriesTimers)
@@ -136,11 +141,6 @@ class ServerWMCSeriesTimers extends ServerWMVModuleBase
         return true;
     }
 
-    public function GetSeriesTimersData()
-    {
-        return $this->SeriesTimers;
-    }
-
     protected function ProcessHookData()
     {
         http_response_code(200);
@@ -151,7 +151,7 @@ class ServerWMCSeriesTimers extends ServerWMVModuleBase
         header('Cache-Control: no-cache');
         header('Content-Type: text/plain');
 
-        if ((!isset($_GET['action'])) or ( !isset($_GET['value']))or ( !isset($_GET['Secret']))) {
+        if ((!isset($_GET['action'])) || (!isset($_GET['value'])) || (!isset($_GET['Secret']))) {
             echo 'Invalid parameters.';
             return;
         }
@@ -483,5 +483,4 @@ class ServerWMCSeriesTimers extends ServerWMVModuleBase
         ];
         return ['Table' => $NewTableConfig, 'Columns' => $NewColumnsConfig, 'Rows' => $NewRowsConfig];
     }
-
 }

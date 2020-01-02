@@ -10,8 +10,8 @@ require_once __DIR__ . '/../libs/ServerWMVModuleBase.php';
  */
 class ServerWMCRecordings extends ServerWMVModuleBase
 {
-    static $FunctionFilter = 'GetRecordings';
-    static $RecordingKeys = [
+    public static $FunctionFilter = 'GetRecordings';
+    public static $RecordingKeys = [
         'RecordingID',
         'Title',
         'File',
@@ -61,7 +61,10 @@ class ServerWMCRecordings extends ServerWMVModuleBase
         $this->RefreshHTMLData($this->Recordings);
     }
 
-
+    public function GetRecordingsData()
+    {
+        return $this->Recordings;
+    }
 
     protected function GetRecordings(array $Recordings)
     {
@@ -103,11 +106,6 @@ class ServerWMCRecordings extends ServerWMVModuleBase
         return true;
     }
 
-    public function GetRecordingsData()
-    {
-        return $this->Recordings;
-    }
-
     protected function ProcessHookData()
     {
         http_response_code(200);
@@ -118,7 +116,7 @@ class ServerWMCRecordings extends ServerWMVModuleBase
         header('Cache-Control: no-cache');
         header('Content-Type: text/plain');
 
-        if ((!isset($_GET['action'])) or ( !isset($_GET['value']))or ( !isset($_GET['Secret']))) {
+        if ((!isset($_GET['action'])) || (!isset($_GET['value'])) || (!isset($_GET['Secret']))) {
             echo 'Invalid parameters.';
             return;
         }
@@ -341,5 +339,4 @@ class ServerWMCRecordings extends ServerWMVModuleBase
         ];
         return ['Table' => $NewTableConfig, 'Columns' => $NewColumnsConfig, 'Rows' => $NewRowsConfig];
     }
-
 }

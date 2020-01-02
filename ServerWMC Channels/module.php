@@ -9,7 +9,7 @@ require_once __DIR__ . '/../libs/ServerWMVModuleBase.php';
  */
 class ServerWMCChannels extends ServerWMVModuleBase
 {
-    static $FunctionFilter = 'GetChannels';
+    public static $FunctionFilter = 'GetChannels';
 
     public function Create()
     {
@@ -32,6 +32,11 @@ class ServerWMCChannels extends ServerWMVModuleBase
         }
         $this->RegisterHook('/hook/ServerWMCChannels/' . $this->InstanceID);
         $this->RefreshHTMLData($this->Channels);
+    }
+
+    public function GetChannelsData()
+    {
+        return $this->Channels;
     }
 
     protected function GetChannels(array $Channels)
@@ -65,11 +70,6 @@ class ServerWMCChannels extends ServerWMVModuleBase
         return true;
     }
 
-    public function GetChannelsData()
-    {
-        return $this->Channels;
-    }
-
     protected function ProcessHookData()
     {
         http_response_code(200);
@@ -80,7 +80,7 @@ class ServerWMCChannels extends ServerWMVModuleBase
         header('Cache-Control: no-cache');
         header('Content-Type: text/plain');
 
-        if ((!isset($_GET['action'])) or ( !isset($_GET['value']))or ( !isset($_GET['Secret']))) {
+        if ((!isset($_GET['action'])) || (!isset($_GET['value'])) || (!isset($_GET['Secret']))) {
             echo 'Invalid parameters.';
             return;
         }
@@ -422,5 +422,4 @@ class ServerWMCChannels extends ServerWMVModuleBase
         ];
         return ['Table' => $NewTableConfig, 'Columns' => $NewColumnsConfig, 'Rows' => $NewRowsConfig];
     }
-
 }

@@ -15,8 +15,10 @@ eval('declare(strict_types=1);namespace ServerWMCIO {?>' . file_get_contents(__D
  */
 class ServerWMCIO extends IPSModule
 {
-    use \ServerWMCIO\DebugHelper,
-        \ServerWMCIO\BufferHelper,
+    use \ServerWMCIO\DebugHelper;
+    use
+        \ServerWMCIO\BufferHelper;
+    use
         \ServerWMCIO\Semaphore;
     public function Create()
     {
@@ -78,6 +80,19 @@ class ServerWMCIO extends IPSModule
         $this->GetSeriesTimers();
         $this->GetTimers();
         $this->GetRecordings();
+    }
+
+    public function ForwardData($JSONString)
+    {
+        $data = json_decode($JSONString, true);
+        unset($data['DataID']);
+        $this->SendDebug('Forward', $data, 0);
+        if ($this->GetStatus() != IS_ACTIVE) {
+            $this->SendDebug('Error', 'not active', 0);
+            return serialize(null);
+        }
+        $result = $this->Send($data['Function'], $data['Params']);
+        return serialize($result);
     }
 
     protected function GetChannels()
@@ -151,7 +166,6 @@ class ServerWMCIO extends IPSModule
             }
             stream_set_timeout($Socket, 5);
 
-
             $this->SendDebug('Send', $Request, 0);
             fwrite($Socket, $Request);
             $result = stream_get_line($Socket, 1024 * 1024 * 2, '<EOF>');
@@ -174,27 +188,14 @@ class ServerWMCIO extends IPSModule
         return null;
     }
 
-    public function ForwardData($JSONString)
-    {
-        $data = json_decode($JSONString, true);
-        unset($data['DataID']);
-        $this->SendDebug('Forward', $data, 0);
-        if ($this->GetStatus() != IS_ACTIVE) {
-            $this->SendDebug('Error', 'not active', 0);
-            return serialize(null);
-        }
-        $result = $this->Send($data['Function'], $data['Params']);
-        return serialize($result);
-    }
-
     protected function SendToChilds(string $Function, array $Data)
     {
         $this->SendDataToChildren(
             json_encode(
-                    ['DataID'   => '{F4534A2A-49F8-62CA-48C0-27AAB61B415C}',
-                            'Function' => $Function,
-                            'Data'     => $Data
-                        ]
+                    ['DataID'      => '{F4534A2A-49F8-62CA-48C0-27AAB61B415C}',
+                        'Function' => $Function,
+                        'Data'     => $Data
+                    ]
                 )
         );
     }
