@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
  
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v1
       with:
         submodules: true
 
@@ -17,4 +17,4 @@ jobs:
       run: wget https://phar.phpunit.de/phpunit.phar
 
     - name: Run Tests
-      run: phpdbg -qrr phpunit.phar tests --configuration tests/phpunit.xml
+      run: phpdbg -qrr phpunit.phar tests
