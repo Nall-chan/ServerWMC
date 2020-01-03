@@ -11,18 +11,19 @@ eval('declare(strict_types=1);namespace ServerWMVModuleBase {?>' . file_get_cont
  */
 class ServerWMVModuleBase extends IPSModule
 {
-
-    use \ServerWMVModuleBase\DebugHelper,
-        \ServerWMVModuleBase\BufferHelper,
+    use \ServerWMVModuleBase\DebugHelper;
+    use
+        \ServerWMVModuleBase\BufferHelper;
+    use
         \ServerWMVModuleBase\WebhookHelper;
-    static $FunctionFilter = '';
+    public static $FunctionFilter = '';
 
     public function Create()
     {
         //Never delete this line!
         parent::Create();
         $this->Channels = [];
-        $this->ConnectParent("{7681F2B3-FA3A-D6A1-F890-DAE6E3E9AFB3}");
+        $this->ConnectParent('{7681F2B3-FA3A-D6A1-F890-DAE6E3E9AFB3}');
     }
 
     public function Destroy()
@@ -44,6 +45,28 @@ class ServerWMVModuleBase extends IPSModule
             case IPS_KERNELSTARTED:
                 IPS_RequestAction($this->InstanceID, 'KernelReady', true);
                 break;
+        }
+    }
+
+    public function ReceiveData($JSONString)
+    {
+        $data = json_decode($JSONString, true);
+        unset($data['DataID']);
+        $this->SendDebug('Receive', $data, 0);
+        if ($data['Function'] == static::$FunctionFilter) {
+            $this->{static::$FunctionFilter}($data['Data']);
+            return;
+        }
+        if ($data['Function'] == 'GetChannels') {
+            $this->GetChannels($data['Data']);
+            return;
+        }
+    }
+
+    public function RequestAction($Ident, $Value)
+    {
+        if ($Ident == 'KernelReady') {
+            return $this->KernelReady();
         }
     }
 
@@ -70,21 +93,6 @@ class ServerWMVModuleBase extends IPSModule
         }
         $this->SendDebug('Response', unserialize($Result), 0);
         return unserialize($Result);
-    }
-
-    public function ReceiveData($JSONString)
-    {
-        $data = json_decode($JSONString, true);
-        unset($data['DataID']);
-        $this->SendDebug('Receive', $data, 0);
-        if ($data['Function'] == static::$FunctionFilter) {
-            $this->{static::$FunctionFilter}($data['Data']);
-            return;
-        }
-        if ($data['Function'] == 'GetChannels') {
-            $this->GetChannels($data['Data']);
-            return;
-        }
     }
 
     protected function GetChannels(array $Channels)
@@ -238,7 +246,6 @@ sleep(10).then(() => {
                 }
                 $HTMLData .= '<tr style="' . implode(';', $TrStyle) . ';"' . $JS . '>';
 
-
                 $td = [];
                 foreach ($Config_Columns as $Column) {
                     if ($Column['show'] !== true) {
@@ -284,18 +291,6 @@ sleep(10).then(() => {
         }
     }
 
-    private function KernelReady()
-    {
-        $this->ApplyChanges();
-    }
-
-    public function RequestAction($Ident, $Value)
-    {
-        if ($Ident == 'KernelReady') {
-            return $this->KernelReady();
-        }
-    }
-
     protected function SetSort($Index)
     {
         $Sort = $this->Sort;
@@ -321,4 +316,8 @@ sleep(10).then(() => {
         $this->Sort = $Sort;
     }
 
+    private function KernelReady()
+    {
+        $this->ApplyChanges();
+    }
 }

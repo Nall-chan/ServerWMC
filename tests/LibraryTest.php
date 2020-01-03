@@ -10,22 +10,22 @@ class LibraryValidationTest extends TestCaseSymconValidation
     {
         $this->validateLibrary(__DIR__ . '/..');
     }
-    
+
     public function testValidateIO(): void
     {
         $this->validateModule(__DIR__ . '/../ServerWMC IO');
     }
-    
+
     public function testValidateChannels(): void
     {
         $this->validateModule(__DIR__ . '/../ServerWMC Channels');
     }
-    
+
     public function testValidateRecordings(): void
     {
         $this->validateModule(__DIR__ . '/../ServerWMC Recordings');
     }
-    
+
     public function testValidateTimers(): void
     {
         $this->validateModule(__DIR__ . '/../ServerWMC Timers');

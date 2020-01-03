@@ -6,7 +6,6 @@ include_once __DIR__ . '/stubs/KernelStubs.php';
 include_once __DIR__ . '/stubs/ModuleStubs.php';
 include_once __DIR__ . '/stubs/MessageStubs.php';
 
-
 use PHPUnit\Framework\TestCase;
 
 class IOTest extends TestCase
@@ -27,18 +26,18 @@ class IOTest extends TestCase
         IPS_SetProperty($id, 'Open', true);
         IPS_SetProperty($id, 'Host', '192.168.201.253');
         IPS_ApplyChanges($id);
-        
+
         $json = json_encode(
             [
-                'Function'=>'GetChannels',
-                'Params'=>[]
+                'Function'=> 'GetChannels',
+                'Params'  => []
             ]
         );
-        $Channels=IPS\InstanceManager::getInstanceInterface($id)->ForwardData($json);
-        if (is_bool($Channels)){
+        $Channels = IPS\InstanceManager::getInstanceInterface($id)->ForwardData($json);
+        if (is_bool($Channels)) {
             $this->assertFalse($Channels);
         } else {
-            $this->assertGreaterThan(0, sizeof(unserialize($Channels)));
+            $this->assertGreaterThan(0, count(unserialize($Channels)));
         }
     }
 }
