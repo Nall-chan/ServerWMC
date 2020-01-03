@@ -24,8 +24,13 @@ class IOTest extends TestCase
     {
         $id = IPS_CreateInstance($this->IoID);
         IPS_SetProperty($id, 'Open', true);
-        IPS_SetProperty($id, 'Host', '192.168.201.253');
-        IPS_ApplyChanges($id);
+        if (isset($_ENV['COMPUTERNAME'])) {
+            IPS_SetProperty($id, 'Host', '127.0.0.1');
+            IPS_ApplyChanges($id);
+        } else {
+            IPS_SetProperty($id, 'Host', '127.0.0.1');
+            @IPS_ApplyChanges($id);
+        }
 
         $json = json_encode(
             [
@@ -36,6 +41,7 @@ class IOTest extends TestCase
         $Channels = IPS\InstanceManager::getInstanceInterface($id)->ForwardData($json);
         if (is_bool($Channels)) {
             $this->assertFalse($Channels);
+            $this->
         } else {
             $this->assertGreaterThan(0, count(unserialize($Channels)));
         }
